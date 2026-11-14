@@ -27,8 +27,9 @@ _TOKEN_PATTERNS = (
     re.compile(r"\bgithub_pat_[A-Za-z0-9_]{20,}\b"),
     re.compile(r"(?i)\b(authorization|token|bearer)\s*[:=]?\s*[A-Za-z0-9_\-.]{20,}"),
 )
-# Credentials embedded in URLs: scheme://user:secret@host or scheme://token@host
-_URL_USERINFO = re.compile(r"(?i)\b([a-z][a-z0-9+.-]*://)[^/@\s]+@")
+# Credentials embedded in HTTP(S)/FTP URLs: scheme://user:secret@host or scheme://token@host.
+# ssh://git@host carries a plain username and is left alone; redact_url strips ssh passwords.
+_URL_USERINFO = re.compile(r"(?i)\b((?:https?|ftps?)://)[^/@\s]+@")
 
 
 def scrub_secrets(text: str) -> str:

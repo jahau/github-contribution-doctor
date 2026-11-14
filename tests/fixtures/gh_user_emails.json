@@ -1,0 +1,5 @@
+[
+  {"email": "alex@alexmorgan.dev", "primary": true, "verified": true, "visibility": "private"},
+  {"email": "1234567+alexdev@users.noreply.github.com", "primary": false, "verified": true, "visibility": null},
+  {"email": "a.morgan@old-employer.fi", "primary": false, "verified": false, "visibility": null}
+]
