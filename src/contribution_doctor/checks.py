@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
@@ -41,7 +42,12 @@ class ScanContext:
     extra_emails: frozenset[str] = field(default_factory=frozenset)
 
     def email(self, address: str) -> str:
-        return mask_email(address, show=self.show_emails)
+        masked = mask_email(address, show=self.show_emails)
+        if masked == address:
+            return masked
+        # A short, stable tag keeps different addresses distinguishable after masking.
+        tag = hashlib.sha256(address.encode("utf-8")).hexdigest()[:4]
+        return f"{masked} #{tag}"
 
     @property
     def target(self) -> str | None:
@@ -87,6 +93,11 @@ def _f(
 
 def _day(d: datetime | None) -> str:
     return d.date().isoformat() if d else "?"
+
+
+def _span(first: datetime | None, last: datetime | None) -> str:
+    a, b = _day(first), _day(last)
+    return a if a == b else f"{a}..{b}"
 
 
 def _cap(lines: list[str], total: int | None = None) -> list[str]:
@@ -731,7 +742,7 @@ def _ident_line(ctx: ScanContext, ident: Identity) -> str:
     why = f" - {'; '.join(ident.reasons)}" if ident.reasons else ""
     return (
         f"{_ident_label(ctx, ident)}: {_plural(ident.count, 'commit')}, "
-        f"{_day(ident.first_date)}..{_day(ident.last_date)} [{label}{why}]"
+        f"{_span(ident.first_date, ident.last_date)} [{label}{why}]"
     )
 
 
