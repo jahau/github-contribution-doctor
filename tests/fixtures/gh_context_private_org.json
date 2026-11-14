@@ -1,0 +1,16 @@
+{
+  "data": {
+    "viewer": {"login": "alexdev"},
+    "user": {"login": "octo-dev", "databaseId": 583231},
+    "repository": {
+      "nameWithOwner": "acme/widgets",
+      "isFork": false,
+      "visibility": "PRIVATE",
+      "viewerHasStarred": false,
+      "viewerPermission": "READ",
+      "defaultBranchRef": {"name": "trunk"},
+      "owner": {"__typename": "Organization", "login": "acme"},
+      "parent": null
+    }
+  }
+}

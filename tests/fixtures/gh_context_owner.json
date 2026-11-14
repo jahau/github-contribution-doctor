@@ -1,0 +1,15 @@
+{
+  "data": {
+    "viewer": {"login": "alexdev"},
+    "repository": {
+      "nameWithOwner": "alexdev/widgets",
+      "isFork": false,
+      "visibility": "PUBLIC",
+      "viewerHasStarred": false,
+      "viewerPermission": "ADMIN",
+      "defaultBranchRef": {"name": "main"},
+      "owner": {"__typename": "User", "login": "alexdev"},
+      "parent": null
+    }
+  }
+}

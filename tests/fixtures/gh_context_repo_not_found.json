@@ -1,0 +1,11 @@
+{
+  "data": {"viewer": {"login": "alexdev"}, "repository": null},
+  "errors": [
+    {
+      "type": "NOT_FOUND",
+      "path": ["repository"],
+      "locations": [{"line": 6, "column": 3}],
+      "message": "Could not resolve to a Repository with the name 'alexdev/widgets'."
+    }
+  ]
+}
