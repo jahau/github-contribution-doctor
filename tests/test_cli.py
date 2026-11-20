@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pytest
 
+from contribution_doctor import __version__
 from contribution_doctor.catalog import RULES
 from contribution_doctor.cli import _translate_legacy, main
 
@@ -99,4 +100,4 @@ def test_module_entry_point() -> None:
         check=False,
     )
     assert proc.returncode == 0
-    assert "0.2.0" in proc.stdout
+    assert __version__ in proc.stdout
