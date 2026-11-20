@@ -41,6 +41,7 @@ Without it, all local checks still run.
 contribution-doctor scan .                  # diagnose the repo for the gh-authenticated account
 contribution-doctor scan . --user octocat   # diagnose for a specific GitHub profile
 contribution-doctor scan . --format json    # machine-readable output
+contribution-doctor scan . --format markdown  # GitHub-flavoured Markdown (job summaries)
 contribution-doctor scan . --offline        # never contact GitHub
 contribution-doctor scan . --history 100    # scan at most 100 commits (default 500)
 contribution-doctor scan . --explain        # background + documentation for every finding
@@ -64,6 +65,63 @@ contribution-doctor rules                   # list all rule IDs
 | `1` | Scan completed and at least one `FAIL` finding (or `WARN` with `--strict`). |
 | `2` | Invalid command-line usage. |
 | `3` | Environment error: Git missing, path is not a repository, Git failed or timed out. |
+
+The exit codes are the same for every `--format`.
+
+### Markdown and GitHub Actions job summaries
+
+`--format markdown` prints the same findings, statuses, and *verified*/*possible* and
+confidence labels as the other formats, as GitHub-flavoured Markdown. You can append it to
+`$GITHUB_STEP_SUMMARY` or paste it into an issue.
+
+- **Safe to publish.** Emails are masked unless you pass `--show-emails`, and the summary
+  table says when they are not. Token-like strings and URL credentials are scrubbed. Every
+  value taken from the repository (author names, branch names, evidence) is escaped, so it
+  cannot inject links, images, HTML, mentions, or table cells. Control and bidirectional
+  override characters are removed. Unicode text is kept.
+- **Deterministic.** The output has no timestamp, and it is always UTF-8 with LF line
+  endings, so the same repository state renders to identical bytes on every OS.
+- **Collapsible details.** `FAIL`, `WARN`, and `UNKNOWN` findings come with evidence and
+  remediation in `<details>` blocks. `--explain` adds background for every finding.
+
+A workflow that runs the scan without changing anything: it has a read-only token, does
+not persist credentials, runs offline (it never calls GitHub or needs a token), and only
+writes to the job summary.
+
+```yaml
+name: Contribution diagnostics
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  doctor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0             # full history; a shallow clone is reported as REPO-SHALLOW
+          persist-credentials: false # do not leave the token in .git/config
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      # Replace <ref> with a release tag or commit SHA that includes --format markdown.
+      - run: python -m pip install "git+https://github.com/jahau/github-contribution-doctor@<ref>"
+      - name: Diagnose (read-only, offline)
+        # Treat findings as advisory. Remove this line to fail the job on FAIL findings.
+        continue-on-error: true
+        run: |
+          contribution-doctor scan . --offline --user "$GITHUB_ACTOR" \
+            --format markdown >> "$GITHUB_STEP_SUMMARY"
+```
+
+CI runners have no `user.email` configured, so offline identity matching relies on
+`--user` and on `--email ADDRESS` (repeatable). Pin the install to a tag or commit SHA, not
+a branch.
 
 ## Sample output
 

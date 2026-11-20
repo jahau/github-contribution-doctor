@@ -21,7 +21,7 @@ from contribution_doctor.github import valid_login
 from contribution_doctor.gitio import GitError, GitTimeout, GitUnavailable
 from contribution_doctor.models import Status
 from contribution_doctor.privacy import scrub_secrets
-from contribution_doctor.render import render_json, render_text
+from contribution_doctor.render import render_json, render_markdown, render_text
 from contribution_doctor.repo import RepoError
 
 EXIT_OK = 0
@@ -78,7 +78,10 @@ def build_parser() -> argparse.ArgumentParser:
         help="GitHub profile to diagnose (default: the gh-authenticated account)",
     )
     p.add_argument(
-        "--format", choices=("text", "json"), default="text", help="output format (default: text)"
+        "--format",
+        choices=("text", "json", "markdown"),
+        default="text",
+        help="output format (default: text); markdown suits GitHub Actions job summaries",
     )
     p.add_argument(
         "--offline", action="store_true", help="do not contact GitHub; local checks only"
@@ -182,6 +185,17 @@ def _print_rules() -> int:
     return EXIT_OK
 
 
+def _write_utf8(text: str) -> None:
+    """Write UTF-8 regardless of the console code page (job summary files are UTF-8)."""
+    sys.stdout.flush()
+    buffer = getattr(sys.stdout, "buffer", None)
+    if buffer is None:
+        sys.stdout.write(text)
+        return
+    buffer.write(text.encode("utf-8", errors="replace"))
+    buffer.flush()
+
+
 def _err(msg: str) -> None:
     print(f"contribution-doctor: error: {scrub_secrets(msg)}", file=sys.stderr)
 
@@ -232,6 +246,8 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if args.format == "json":
         sys.stdout.write(render_json(report))
+    elif args.format == "markdown":
+        _write_utf8(render_markdown(report, explain=args.explain))
     else:
         sys.stdout.write(render_text(report, explain=args.explain, color=_use_color(args.color)))
 

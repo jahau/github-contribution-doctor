@@ -41,6 +41,7 @@ jobs:
         run: |
           contribution-doctor --version
           contribution-doctor scan . --offline --format json
+          contribution-doctor scan . --offline --format markdown
           python doctor.py --repo . --offline
 
   build:
