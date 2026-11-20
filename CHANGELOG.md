@@ -4,6 +4,24 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- `scan --format markdown`: deterministic GitHub-flavoured Markdown for GitHub Actions job
+  summaries and issues. It uses the same findings, statuses, verified/possible labels, and
+  confidence levels as text and JSON. Emails are masked by default. All repository-derived
+  text is escaped, control and bidi characters are removed, and secrets are scrubbed before
+  escaping. The output is always UTF-8 with LF line endings and has no timestamp.
+- README example of a GitHub Actions workflow that runs the scan without changing anything
+  (offline, read-only token, no persisted credentials).
+- Snapshot tests for the Markdown output (Unicode and hostile markup, redaction, `UNKNOWN`
+  states, empty findings).
+
+### Unchanged
+
+- Text and JSON output, JSON `schema_version: 1`, and exit codes.
+
 ## [0.2.0] - 2026-11-14
 
 A rewrite of the prototype into an installable, tested diagnostic tool.

@@ -35,7 +35,7 @@ CI runs the same commands on Linux, Windows, and macOS for Python 3.10–3.14.
 | `checks.py` | One function per rule, each returning a `Finding` |
 | `catalog.py` | Stable rule IDs, titles, explanations, and documentation links |
 | `engine.py` | Orchestration: collect, query GitHub, assign ownership, run checks |
-| `render.py`, `cli.py` | Text/JSON output and the command-line interface |
+| `render.py`, `cli.py` | Text/JSON/Markdown output and the command-line interface |
 
 ## Ground rules for changes
 
@@ -53,6 +53,9 @@ CI runs the same commands on Linux, Windows, and macOS for Python 3.10–3.14.
 5. **Tests use real Git.** Build scenarios with `RepoBuilder` in `tests/conftest.py`, and
    mock GitHub with `FakeGh` and the JSON files in `tests/fixtures/`. Tests must not touch
    the network or your global Git config. Use fictional identities only.
+6. **Markdown snapshots.** `tests/snapshots/*.md` pin the exact `--format markdown` output.
+   After an intentional change, regenerate them with `UPDATE_SNAPSHOTS=1 pytest
+   tests/test_markdown.py`, then review the diff.
 
 ## Reporting a wrong diagnosis
 
