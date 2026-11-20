@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "github-contribution-doctor"
-version = "0.2.0"
+version = "0.3.0"
 description = "Read-only diagnostics for Git commits that are missing from a GitHub contribution graph."
 readme = "README.md"
 license = "MIT"

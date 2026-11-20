@@ -109,8 +109,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-      # Replace <ref> with a release tag or commit SHA that includes --format markdown.
-      - run: python -m pip install "git+https://github.com/jahau/github-contribution-doctor@<ref>"
+      - run: python -m pip install "git+https://github.com/jahau/github-contribution-doctor@v0.3.0"
       - name: Diagnose (read-only, offline)
         # Treat findings as advisory. Remove this line to fail the job on FAIL findings.
         continue-on-error: true
@@ -130,7 +129,7 @@ used a work email for some commits, and has a feature branch and two unpushed co
 Excerpt from `contribution-doctor scan . --offline --user alexdev`:
 
 ```text
-GitHub Contribution Doctor 0.2.0  (read-only)
+GitHub Contribution Doctor 0.3.0  (read-only)
 Repository: widgets  ->  github.com/alexdev/widgets
 Profile:    @alexdev
 Mode:       offline  |  commits scanned: 7

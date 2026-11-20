@@ -4,7 +4,7 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses
 [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.3.0] - 2026-11-20
 
 ### Added
 
@@ -76,4 +76,5 @@ A rewrite of the prototype into an installable, tested diagnostic tool.
 - Initial prototype: latest-commit author email, current branch, and `gh repo view` fork
   check.
 
+[0.3.0]: https://github.com/jahau/github-contribution-doctor/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/jahau/github-contribution-doctor/compare/afca7c7...v0.2.0
